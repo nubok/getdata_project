@@ -46,4 +46,21 @@ where (as described) y denotes the activity of each row and activity labels tell
 > clean_dataset1 <-data.frame(X[,cols], subject, activity_column)
 The variable names will be ugly, but this is the work for the next step:
 
-Concerning part "4. Appropriately labels the data set with descriptive variable names." Since most reviewers would not consider the naming of the columns from features.txt as descriptive, we have to find better names.
+Concerning part "4. Appropriately labels the data set with descriptive variable names." Since most reviewers would not consider the naming of the columns from features.txt as descriptive, we have to find better names. The concrete naming is described in the codebook (codebook.md) - thus we'll only describe here how they are created. For each class A and B from 2. we create a descriptive variant (stored in variable "xyz_desc" for type A and "other_signal_desc" for type B) and use the loop created in 2 to additionally create a list of descriptive names (stored in variable "names_descriptive"). At the end we just use
+
+> colnames(clean_dataset1) <- c("subject", "activity", 
+                              names_descriptive)
+
+to apply the names.
+
+Now doing "5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject." is very easy: Just do an an aggregation and update the row names to be still descriptive:
+
+> clean_dataset2 <- aggregate(clean_dataset1[,!names(clean_dataset1) %in% c("subject", "activity")], by=list(clean_dataset1$subject, clean_dataset1$activity), FUN=mean)
+> varnames <- colnames(clean_dataset2)[3:ncol(clean_dataset2)]
+> varnames <- paste0("mean_per_subject_and_activity_of_", varnames)
+> colnames(clean_dataset2) <- c("subject", "activity", varnames)
+
+At last we export both datasets:
+
+> write.table(clean_dataset1, file = "dataset_step4.txt", row.name=FALSE)
+> write.table(clean_dataset2, file = "dataset_step5.txt", row.name=FALSE)

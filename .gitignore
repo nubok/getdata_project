@@ -10,6 +10,5 @@
 # RStudio files
 .Rproj.user/
 
-getdata-projectfiles-UCI HAR Dataset.zip
-dataset_step*.txt
+*.zip
 

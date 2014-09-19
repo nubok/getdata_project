@@ -42,18 +42,16 @@ xyz_signals <- c("tBodyAcc",
                  "tBodyGyroJerk", 
                  "fBodyAcc", 
                  "fBodyAccJerk", 
-                 "fBodyGyro"
-                )
+                 "fBodyGyro")
 
-xyz_desc <- c("time_body_acceleration", 
-              "time_gravity_acceleration", 
-              "time_body_acceleration_jerk", 
-              "time_body_angularvelocity", 
-              "time_body_angularvelocity_jerk", 
-              "frequency_body_acceleration", 
-              "frequency_body_acceleration_jerk", 
-              "frequency_body_angularvelocity"
-              )
+xyz_desc <- c("body_acceleration_time", 
+              "gravity_acceleration_time", 
+              "body_acceleration_jerk_time", 
+              "body_angularvelocity_time", 
+              "body_angularvelocity_jerk_time", 
+              "body_acceleration_frequency", 
+              "body_acceleration_jerk_frequency", 
+              "body_angularvelocity_frequency")
 
 other_signals <- c("tBodyAccMag", 
                    "tGravityAccMag", 
@@ -65,34 +63,53 @@ other_signals <- c("tBodyAccMag",
                    "fBodyBodyGyroMag", 
                    "fBodyBodyGyroJerkMag")
 
+other_signal_desc <- c("body_acceleration_time", 
+                       "gravity_acceleration_time", 
+                       "body_acceleration_jerk_time", 
+                       "body_angularvelocity_time", 
+                       "body_angularvelocity_jerk_time", 
+                       "body_acceleration_frequency", 
+                       "body_body_acceleration_jerk_frequency", 
+                       "body_body_angularvelocity_frequency", 
+                       "body_body_angularvelocity_jerk_frequency")
+
 # We ignore ...-meanFreq() since it is not clear from the 
 # assignment description (2.) whether to include it or not
 
 names <- c()
 names_descriptive <- c()
 
-for (s in xyz_signals) {
+array_idx <- 1
+
+for (array_idx in 1:length(xyz_signals)) {
   for (type in c("mean", "std")) {
     for (coord in c("X", "Y", "Z")) {
-      names <- c(names, paste0(s, "-", type, "()-", coord))
+      names <- c(names, paste0(xyz_signals[array_idx], "-", type, "()-", coord))
       
       if (type == "mean") {
-        curr_name <- "mean"
+        curr_desc_name <- "mean"
       } else {
-        curr_name <- "standard_deviation"
+        curr_desc_name <- "standard_deviation"
       }
-      
-      curr_name = paste0(curr_name, "_of_")
-    
-      
-      names_descriptive <- c()
+      curr_desc_name = paste0(curr_desc_name, "_of_", xyz_desc[array_idx], "_", coord)
+      names_descriptive <- c(names_descriptive, curr_desc_name)
     }
   }
 }
 
-for (s in other_signals) {
+array_idx <- 1
+
+for (array_idx in 1:length(other_signals)) {
   for (type in c("mean", "std")) {
-    names <- c(names, paste0(s, "-", type, "()"))
+    names <- c(names, paste0(other_signals[array_idx], "-", type, "()"))
+    
+    if (type == "mean") {
+      curr_desc_name <- "mean"
+    } else {
+      curr_desc_name <- "standard_deviation"
+    }
+    curr_desc_name = paste0(curr_desc_name, "_of_", other_signal_desc[array_idx], "_magnitude")
+    names_descriptive <- c(names_descriptive, curr_desc_name)
   }
 }
 
@@ -106,7 +123,10 @@ for (name in names) {
 
 activity_column <- activity_labels[y[,1], 2]
 clean_dataset1 <-data.frame(subject, activity_column, X[,cols])
-colnames(clean_dataset1) <- c("subject", "activity", names)
+colnames(clean_dataset1) <- c("subject", "activity", 
+                              names_descriptive
+                              #names
+                              )
 
 clean_dataset2 <- aggregate(clean_dataset1[,!names(clean_dataset1) %in% c("subject", "activity")], by=list(clean_dataset1$subject, clean_dataset1$activity), FUN=mean)
 varnames <- colnames(clean_dataset2)[3:ncol(clean_dataset2)]
