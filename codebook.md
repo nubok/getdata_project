@@ -15,7 +15,16 @@ data. To quote from features_info.txt:
 >
 > Subsequently, the body linear acceleration and angular velocity were derived in time to obtain Jerk signals (tBodyAccJerk-XYZ and tBodyGyroJerk-XYZ). Also the magnitude of these three-dimensional signals were calculated using the Euclidean norm (tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMag). 
 > 
-> Finally a Fast Fourier Transform (FFT) was applied to some of these signals producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, fBodyGyroJerkMag. (Note the 'f' to indicate frequency domain signals). 
+> Finally a Fast Fourier Transform (FFT) was applied to some of these signals producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, fBodyGyroJerkMag. (Note the 'f' to indicate frequency domain signals).
+
+Also you can read in this file:
+
+> The set of variables that were estimated from these signals are: 
+> 
+> mean(): Mean value
+> std(): Standard deviation
+
+So with this background we can describe how the data from dataset_step4.txt corresponds to the original data:
 
 * mean_of_body_acceleration_time_X/mean_of_body_acceleration_time_Y/mean_of_body_acceleration_time_Z: Corresponds to tBodyAcc-mean()-X, tBodyAcc-mean()-Y, tBodyAcc-mean()-Z
 * standard_deviation_of_body_acceleration_time_*: Corresponds to tBodyAcc-std()-*.
