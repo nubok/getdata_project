@@ -8,7 +8,7 @@ Running the code
 
 To run the script just call
 
-> source('run_analysis.R')
+    > source('run_analysis.R')
 
 Code book
 ---------
@@ -36,35 +36,35 @@ Instead of (error-prone) looking up for column indices, the program will determi
 
 where A, B are some labels, C is from {mean, std} and D is from {X, Y, Z}. Thus we just have to provide the labels for A and B to build all the strings. These are in the variables "xyz_signals" and "other_signals". We just run a serious of two multiple nested for loops and after that we have all the names that we are interested in in a variable called "names". Then we just check (the file "feature.txt" or the variable "features" (where this dataset is loaded into) contain the key for this) what the column indices of this field names are (stored in variable "cols") - job done. Then we just have to use
 
-> out_dataset1 <-data.frame(X[,cols])
+    > out_dataset1 <-data.frame(X[,cols])
 
 to get the correct columns (but we won't do that since we want additional columns).
 
 For "3. Uses descriptive activity names to name the activities in the data set.", we simply use
 
-> activity_column <- activity_labels[y[,1], 2]
+    > activity_column <- activity_labels[y[,1], 2]
 
 where (as described) y denotes the activity of each row and activity labels tells us the name of each activity. Now we can create a first dataset:
 
-> clean_dataset1 <-data.frame(X[,cols], subject, activity_column)
+    > clean_dataset1 <-data.frame(X[,cols], subject, activity_column)
 
 The variable names will be ugly, but this is the work for the next step:
 
 Concerning part "4. Appropriately labels the data set with descriptive variable names." Since most reviewers would not consider the naming of the columns from features.txt as descriptive, we have to find better names. The concrete naming is described in the codebook (codebook.md) - thus we'll only describe here how they are created. For each class A and B from 2. we create a descriptive variant (stored in variable "xyz_desc" for type A and "other_signal_desc" for type B) and use the loop created in 2 to additionally create a list of descriptive names (stored in variable "names_descriptive"). At the end we just use
 
-> colnames(clean_dataset1) <- c("subject", "activity", 
-                              names_descriptive)
+    > colnames(clean_dataset1) <- c("subject", "activity", 
+                                  names_descriptive)
 
 to apply the names.
 
 Now doing "5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject." is very easy: Just do an an aggregation and update the row names to be still descriptive:
 
-> clean_dataset2 <- aggregate(clean_dataset1[,!names(clean_dataset1) %in% c("subject", "activity")], by=list(clean_dataset1$subject, clean_dataset1$activity), FUN=mean)
-> varnames <- colnames(clean_dataset2)[3:ncol(clean_dataset2)]
-> varnames <- paste0("mean_per_subject_and_activity_of_", varnames)
-> colnames(clean_dataset2) <- c("subject", "activity", varnames)
+    > clean_dataset2 <- aggregate(clean_dataset1[,!names(clean_dataset1) %in% c("subject", "activity")], by=list(clean_dataset1$subject, clean_dataset1$activity), FUN=mean)
+    > varnames <- colnames(clean_dataset2)[3:ncol(clean_dataset2)]
+    > varnames <- paste0("mean_per_subject_and_activity_of_", varnames)
+    > colnames(clean_dataset2) <- c("subject", "activity", varnames)
 
 At last we export both datasets:
 
-> write.table(clean_dataset1, file = "dataset_step4.txt", row.name=FALSE)
-> write.table(clean_dataset2, file = "dataset_step5.txt", row.name=FALSE)
+    > write.table(clean_dataset1, file = "dataset_step4.txt", row.name=FALSE)
+    > write.table(clean_dataset2, file = "dataset_step5.txt", row.name=FALSE)
