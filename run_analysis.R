@@ -124,9 +124,7 @@ for (name in names) {
 activity_column <- activity_labels[y[,1], 2]
 clean_dataset1 <-data.frame(subject, activity_column, X[,cols])
 colnames(clean_dataset1) <- c("subject", "activity", 
-                              names_descriptive
-                              #names
-                              )
+                              names_descriptive)
 
 clean_dataset2 <- aggregate(clean_dataset1[,!names(clean_dataset1) %in% c("subject", "activity")], by=list(clean_dataset1$subject, clean_dataset1$activity), FUN=mean)
 varnames <- colnames(clean_dataset2)[3:ncol(clean_dataset2)]
