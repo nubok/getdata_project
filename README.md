@@ -10,6 +10,8 @@ To run the script just call
 
     > source('run_analysis.R')
 
+Of course the dataset file getdata-projectfiles-UCI HAR Dataset.zip has to be in the current working directory.
+
 Code book
 ---------
 
